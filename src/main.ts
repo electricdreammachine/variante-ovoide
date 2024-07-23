@@ -100,6 +100,7 @@ renderer.setSize(temp.width, temp.height);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.autoRotate = true;
 controls.autoRotateSpeed = 2;
+controls.enablePan = false;
 
 camera.position.z = 30;
 controls.minPolarAngle = Math.PI / 2; // 90 degrees
