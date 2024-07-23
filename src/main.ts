@@ -107,6 +107,7 @@ controls.minPolarAngle = Math.PI / 2; // 90 degrees
 controls.maxPolarAngle = Math.PI / 2; // 90 degrees
 controls.minDistance = 30;
 controls.maxDistance = 30;
+controls.enableZoom = false;
 controls.update();
 
 function createSkybox() {
