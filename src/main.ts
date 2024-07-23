@@ -132,4 +132,7 @@ function animate() {
 }
 
 animate();
+document.body.addEventListener("ontouchmove", (e) => {
+  e.stopPropagation();
+});
 document.body.appendChild(renderer.domElement);
