@@ -1,144 +1,141 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createExtrudedArcGeometry } from "./create-arc";
-import nx from "./nx.jpg?url";
-import ny from "./ny.jpg?url";
-import nz from "./nz.jpg?url";
-import px from "./px.jpg?url";
-import py from "./py.jpg?url";
-import pz from "./pz.jpg?url";
+import { createSkyboxTextureCube } from "./create-skybox";
 
 const scene = new THREE.Scene();
 
-const arc1 = createExtrudedArcGeometry(10, 11.5, 4, 0, Math.PI * 2 * 0.6, 32);
-const arc2 = createExtrudedArcGeometry(10.5, 12, 4, 0, Math.PI * 2 * 0.95, 32);
-const arc3 = createExtrudedArcGeometry(10, 11.5, 4, 0, Math.PI * 2 * 0.3, 32);
-const base = new THREE.CylinderGeometry(2, 4, 4, 32);
 const floorGeometry = new THREE.CircleGeometry(200);
-
-// Create a material for the floor
 const floorMaterial = new THREE.MeshBasicMaterial({
   color: 0x999999,
   side: THREE.DoubleSide,
 });
+const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
-// Create a mesh by combining the geometry and material
-const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
+const baseGeometry = new THREE.CylinderGeometry(2, 4, 4, 32);
+const baseMaterial = new THREE.MeshStandardMaterial({
+  color: 0x444444,
+  metalness: 0.2,
+  roughness: 1,
+});
+const base = new THREE.Mesh(baseGeometry, baseMaterial);
 
-const material = new THREE.MeshStandardMaterial({
-  color: 0x00ff00,
-  emissive: 0x00ff00,
+const arc1Geometry = createExtrudedArcGeometry(
+  10,
+  11.5,
+  4,
+  0,
+  Math.PI * 2 * 0.6,
+  32
+);
+
+const arc2Geometry = createExtrudedArcGeometry(
+  10.5,
+  12,
+  4,
+  0,
+  Math.PI * 2 * 0.95,
+  32
+);
+
+const arc3Geometry = createExtrudedArcGeometry(
+  10,
+  11.5,
+  4,
+  0,
+  Math.PI * 2 * 0.3,
+  32
+);
+
+const arcMaterial = new THREE.MeshStandardMaterial({
+  color: 0xb7410e,
+  emissive: 0xb7410e,
   emissiveIntensity: 0.01,
   metalness: 1,
   roughness: 1,
 });
 
-const material2 = new THREE.MeshStandardMaterial({
-  color: 0x444444,
-  emissive: 0x444444,
-  metalness: 0.2,
-  roughness: 1,
-});
+const arc1 = new THREE.Mesh(arc1Geometry, arcMaterial);
+const arc2 = new THREE.Mesh(arc2Geometry, arcMaterial);
+const arc3 = new THREE.Mesh(arc3Geometry, arcMaterial);
 
-const mesh1 = new THREE.Mesh(arc1, material);
-const mesh2 = new THREE.Mesh(arc2, material);
-const mesh3 = new THREE.Mesh(arc3, material);
-const mesh4 = new THREE.Mesh(base, material2);
+scene.add(floor);
+scene.add(base);
+scene.add(arc1);
+scene.add(arc2);
+scene.add(arc3);
 
-scene.add(mesh1);
-scene.add(mesh2);
-scene.add(mesh3);
-scene.add(mesh4);
-scene.add(floorMesh);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = -15;
 
-mesh1.position.z = -2;
-mesh1.scale.setY(-1);
-mesh1.rotation.z = 35 * (Math.PI / 100);
+base.position.y = -13.5;
 
-mesh2.material.color.set(0xff0000);
+arc1.position.z = -2;
+arc1.scale.setY(-1);
+arc1.rotation.z = 35 * (Math.PI / 100);
 
-mesh2.position.y = 4.5;
-mesh2.position.x = -3.25;
-mesh2.rotation.x = Math.PI / 2;
-mesh2.rotation.z = -45 * (Math.PI / 100);
-mesh2.rotation.y = 25 * (Math.PI / 100);
+arc2.position.y = 4.5;
+arc2.position.x = -3.25;
+arc2.rotation.x = Math.PI / 2;
+arc2.rotation.z = -45 * (Math.PI / 100);
+arc2.rotation.y = 25 * (Math.PI / 100);
 
-// mesh3.rotation.z = 60 * (Math.PI / 100);
-mesh3.rotation.order = "YXZ";
-mesh3.rotation.x = -25 * (Math.PI / 100);
-mesh3.rotation.z = -25 * (Math.PI / 100);
-mesh3.rotation.y = 50 * (Math.PI / 100);
+arc3.rotation.order = "YXZ";
+arc3.rotation.x = -25 * (Math.PI / 100);
+arc3.rotation.z = -25 * (Math.PI / 100);
+arc3.rotation.y = 50 * (Math.PI / 100);
+arc3.position.y = 0.2;
+arc3.position.x = -6.75;
+arc3.position.z = 0.9;
 
-mesh3.position.y = 0.2;
-mesh3.position.x = -6.75;
-mesh3.position.z = 0.9;
-
-mesh4.position.y = -13.5;
-
-floorMesh.rotation.x = -Math.PI / 2;
-floorMesh.position.y = -15;
-
-const temp = {
+const dimensions = {
   width: window.innerWidth,
   height: window.innerHeight,
 };
 
 const camera = new THREE.PerspectiveCamera(
   75,
-  temp.width / temp.height,
+  dimensions.width / dimensions.height,
   0.1,
   1000
 );
+camera.position.z = 30;
 
 const light = new THREE.PointLight(0xffffff, 100, 1000);
-light.position.set(1, 1, 0);
+light.position.set(0, 5, 0);
 scene.add(light);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(dimensions.width, dimensions.height);
 
-renderer.setSize(temp.width, temp.height);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.autoRotate = true;
 controls.autoRotateSpeed = 2;
 controls.enablePan = false;
-
-camera.position.z = 30;
-controls.minPolarAngle = Math.PI / 2; // 90 degrees
-controls.maxPolarAngle = Math.PI / 2; // 90 degrees
+controls.minPolarAngle = Math.PI / 2;
+controls.maxPolarAngle = Math.PI / 2;
 controls.minDistance = 30;
 controls.maxDistance = 30;
 controls.enableZoom = false;
-controls.update();
 
-function createSkybox() {
-  const urls = [px, nx, py, ny, pz, nz];
-
-  const textureCube = new THREE.CubeTextureLoader().load(urls);
-
-  scene.background = textureCube;
-  scene.backgroundBlurriness = 0.05;
-}
-
-// Call the function to create the skybox
-createSkybox();
+const skyboxTextureCube = createSkyboxTextureCube();
+scene.background = skyboxTextureCube;
+scene.backgroundBlurriness = 0.05;
 
 function animate() {
   requestAnimationFrame(animate);
-
-  // required if controls.enableDamping or controls.autoRotate are set to true
   controls.update();
-
   renderer.render(scene, camera);
 }
 
-// Variables for tracking mouse movement
 let isPointerDown = false;
 let startX = 0;
-const movementThreshold = 10; // pixels
+const movementThreshold = 10;
 
 renderer.domElement.addEventListener("pointerdown", (event) => {
   isPointerDown = true;
   startX = event.clientX;
+
   renderer.domElement.style.cursor = "grabbing";
 });
 
@@ -146,7 +143,6 @@ renderer.domElement.addEventListener("pointermove", (event) => {
   if (isPointerDown && !controls.enabled) {
     const deltaX = Math.abs(event.clientX - startX);
 
-    // Check if horizontal movement exceeds the threshold
     if (deltaX > movementThreshold) {
       renderer.domElement.style.touchAction = "none";
     }
