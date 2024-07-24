@@ -131,8 +131,40 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-animate();
-document.body.addEventListener("ontouchmove", (e) => {
-  e.stopPropagation();
+// Variables for tracking mouse movement
+let isPointerDown = false;
+let startX = 0;
+const movementThreshold = 10; // pixels
+
+renderer.domElement.addEventListener("pointerdown", (event) => {
+  isPointerDown = true;
+  startX = event.clientX;
+  renderer.domElement.style.cursor = "grabbing";
 });
+
+renderer.domElement.addEventListener("pointermove", (event) => {
+  if (isPointerDown && !controls.enabled) {
+    const deltaX = Math.abs(event.clientX - startX);
+
+    // Check if horizontal movement exceeds the threshold
+    if (deltaX > movementThreshold) {
+      renderer.domElement.style.touchAction = "none";
+    }
+  }
+});
+
+renderer.domElement.addEventListener("pointerup", () => {
+  isPointerDown = false;
+  renderer.domElement.style.touchAction = "unset";
+  renderer.domElement.style.cursor = "grab";
+});
+
+renderer.domElement.addEventListener("pointerout", () => {
+  isPointerDown = false;
+  renderer.domElement.style.touchAction = "unset";
+  renderer.domElement.style.cursor = "grab";
+});
+
+animate();
+renderer.domElement.style.touchAction = "unset";
 document.body.appendChild(renderer.domElement);
