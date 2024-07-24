@@ -12,6 +12,16 @@ const floorMaterial = new THREE.MeshBasicMaterial({
 });
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
+const floorOuterRingGeometry = new THREE.RingGeometry(190, 200, 200);
+const floorOuterRingMaterial = new THREE.MeshBasicMaterial({
+  color: 0xa5978b,
+  side: THREE.DoubleSide,
+});
+const floorOuterRing = new THREE.Mesh(
+  floorOuterRingGeometry,
+  floorOuterRingMaterial
+);
+
 const baseGeometry = new THREE.CylinderGeometry(2, 4, 4, 32);
 const baseMaterial = new THREE.MeshStandardMaterial({
   color: 0x444444,
@@ -60,6 +70,7 @@ const arc2 = new THREE.Mesh(arc2Geometry, arcMaterial);
 const arc3 = new THREE.Mesh(arc3Geometry, arcMaterial);
 
 scene.add(floor);
+scene.add(floorOuterRing);
 scene.add(base);
 scene.add(arc1);
 scene.add(arc2);
@@ -67,6 +78,9 @@ scene.add(arc3);
 
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = -15;
+
+floorOuterRing.rotation.x = -Math.PI / 2;
+floorOuterRing.position.y = -14;
 
 base.position.y = -13.5;
 
