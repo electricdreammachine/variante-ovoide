@@ -7,7 +7,7 @@ const scene = new THREE.Scene();
 
 const floorGeometry = new THREE.CircleGeometry(200);
 const floorMaterial = new THREE.MeshBasicMaterial({
-  color: 0x999999,
+  color: 0xd6d0c8,
   side: THREE.DoubleSide,
 });
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
